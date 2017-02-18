@@ -22,15 +22,6 @@
 #define kShareDescription @"英语学习，出国留学，尽在智课！"
 #define kShareLink @"http://www.smartstudy.com"
 
-BOOL applicationOpenURLSourceApplicationAnnotation(id sender,
-                                                   SEL selector,
-                                                   UIApplication *application,
-                                                   NSURL *url,
-                                                   NSString *sourceApp,
-                                                   id annote) {
-  return NO;
-}
-
 BOOL applicationOpenURLSourceApplicationAnnotation2(id sender,
                                                     SEL selector,
                                                     UIApplication *application,
@@ -134,6 +125,7 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
     [platforms addObjectsFromArray:
   @[@(UMSocialPlatformType_Sina),
     @(UMSocialPlatformType_QQ),
+    @(UMSocialPlatformType_Qzone),
     @(UMSocialPlatformType_WechatSession),
     @(UMSocialPlatformType_WechatTimeLine)]];
     ret = platforms;
@@ -226,17 +218,12 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
   @synchronized (self) {
     NSObject *appDelegate = [UIApplication sharedApplication].delegate;
     Class appDelegateCls = appDelegate.class;
-    SEL originalSel = [self originalSelector];
+    SEL originalSel = [self originalSelector]; // 必须有原始的实现，不然iOS不会调openURL的
     SEL newSelector = [self swizzleSelector];
-    if (![self.class tryAddMethodForClass:appDelegateCls selector:originalSel imp:(IMP)applicationOpenURLSourceApplicationAnnotation types:"c@:@@@@"]) {
-      NSLog(@"failed to addMethod of us to app delegate for selector: %@", NSStringFromSelector(originalSel));
-      return NO;
-    }
     if (![self.class tryAddMethodForClass:appDelegateCls selector:newSelector imp:(IMP)applicationOpenURLSourceApplicationAnnotation2 types:"c@:@@@@"]) {
       NSLog(@"failed to addMethod of us to app delegate for selector: %@", NSStringFromSelector(originalSel));
       return NO;
     }
-
     [self exchangeMethod];
     return YES;
   }
