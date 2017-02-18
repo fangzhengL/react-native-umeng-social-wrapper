@@ -117,7 +117,7 @@ RCT_EXPORT_METHOD(setPlatform:(UMSocialPlatformType)type
   });
 }
 
-RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(NSString *)shareType callback:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)shareType callback:(RCTResponseSenderBlock)callback) {
   
   dispatch_async(dispatch_get_main_queue(), ^{
     [self dispathShareTypeWithShareParams:params
