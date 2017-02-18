@@ -16,8 +16,11 @@ export type ShareInfoType = {
 
 function shareToSocialNetwork(
   info:ShareInfoType,
-  platforms:[string] = [/* 'SocialPlatformQQ', 'SocialPlatformQzone', 'SocialPlatformSina'*/'SocialPlatformWechatSession', 'SocialPlatformWechatTimeLine'],
+  platforms?:[string],
   callback:(error:string, success:boolean) => void) {
+  if (!platforms || !platforms.length) {
+    platforms = [/* 'SocialPlatformQQ', 'SocialPlatformQzone', 'SocialPlatformSina'*/'SocialPlatformWechatSession', 'SocialPlatformWechatTimeLine'];
+  }
   const doShare = where => () => (
     UMengShareManager.addEvent(info, where, (error, success) => {
       callback && callback(error, success);
