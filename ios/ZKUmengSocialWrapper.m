@@ -126,28 +126,33 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(NSString *)shareType cal
   });
 }
 
+- (NSSet<NSNumber*> *)supportedPlatforms {
+  static dispatch_once_t onceToken;
+  static NSSet<NSNumber*> *ret = nil;
+  dispatch_once(&onceToken, ^{
+    NSMutableSet<NSNumber*> *platforms = [NSMutableSet set];
+    [platforms addObjectsFromArray:
+  @[@(UMSocialPlatformType_Sina),
+    @(UMSocialPlatformType_QQ),
+    @(UMSocialPlatformType_WechatSession),
+    @(UMSocialPlatformType_WechatTimeLine)]];
+    ret = platforms;
+  });
+  return ret;
+}
+
 - (void)dispathShareTypeWithShareParams:(NSDictionary *)params
-                              shareType:(NSString *)type
+                              shareType:(UMSocialPlatformType)type
                                callback:(RCTResponseSenderBlock)callback{
 
-  NSLog(@"params =========== %@ share type ==== %@", params, type);
+  NSLog(@"params =========== %@ share type ==== %ld", params, type);
   
   void (^goShare)(UIImage*) = ^(UIImage *image){
-    UMSocialPlatformType platform;
     NSString *shareTitle = params[@"mainTitle"] ?: kShareTitle;
     NSString *shareDescription = params[@"subTitle"] ?: kShareDescription;
     NSString *link = params[@"link"] ?: kShareLink;
-    
-    if ([type isEqualToString:@"weibo"]) {
-      platform = UMSocialPlatformType_Sina;
+    if ([[self supportedPlatforms] containsObject:@(type)]) {
       shareDescription = [NSString stringWithFormat:@"%@ %@ %@",shareTitle, shareDescription, link];
-    } else if ([type isEqualToString:@"qq"]) {
-      platform = UMSocialPlatformType_QQ;
-      shareDescription = [NSString stringWithFormat:@"%@ %@ %@",shareTitle, shareDescription, link];
-    } else if ([type isEqualToString:@"wechat"]) {
-      platform = UMSocialPlatformType_WechatSession;
-    }else if ([type isEqualToString:@"wechat-timeline"]) {
-      platform = UMSocialPlatformType_WechatTimeLine;
     }else {
       if (callback) {
         callback(@[@NO]);
@@ -164,7 +169,7 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(NSString *)shareType cal
     shareLinkData.thumbImage = image;
     messageObject.shareObject = shareLinkData;
     [[UMSocialManager defaultManager]
-     shareToPlatform:platform
+     shareToPlatform:type
      messageObject:messageObject
      currentViewController:nil
      completion:^(id data, NSError *error) {
@@ -268,5 +273,14 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(NSString *)shareType cal
   return YES;
 }
 
-
+- (NSDictionary *)constantsToExport
+{
+  return @{
+           @"SocialPlatformQQ": @"QQ好友",
+           @"SocialPlatformQzone": @"QQ空间",
+           @"SocialPlatformWechatSession": @"微信好友",
+           @"SocialPlatformWechatTimeLine": @"微信朋友圈",
+           @"SocialPlatformSina": @"新浪微博",
+            };
+}
 @end
