@@ -1,5 +1,5 @@
 
-package com.reactlibrary;
+package com.umsocial;
 
 import java.util.Arrays;
 import java.util.Collections;
