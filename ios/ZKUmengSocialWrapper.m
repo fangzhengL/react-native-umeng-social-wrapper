@@ -143,9 +143,8 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
     NSString *shareTitle = params[@"mainTitle"] ?: kShareTitle;
     NSString *shareDescription = params[@"subTitle"] ?: kShareDescription;
     NSString *link = params[@"link"] ?: kShareLink;
-    if ([[self supportedPlatforms] containsObject:@(type)]) {
-      shareDescription = [NSString stringWithFormat:@"%@ %@ %@",shareTitle, shareDescription, link];
-    }else {
+    if (![[self supportedPlatforms] containsObject:@(type)]) {
+//      shareDescription = [NSString stringWithFormat:@"%@ %@", shareDescription, link];
       if (callback) {
         callback(@[@NO]);
       }
