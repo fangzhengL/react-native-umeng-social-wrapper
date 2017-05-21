@@ -196,6 +196,10 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
   };
   
   NSString *localImagePath = params[@"localImagePath"];
+    if ([localImagePath hasPrefix:@"http"]) {
+        goShare(localImagePath);
+        return;
+    }
   NSFileManager *fm = [NSFileManager defaultManager];
   if (localImagePath && [fm fileExistsAtPath:localImagePath]) {
     goShare([[UIImage alloc] initWithContentsOfFile:localImagePath]);
