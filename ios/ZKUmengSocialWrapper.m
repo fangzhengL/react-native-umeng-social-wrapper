@@ -139,7 +139,7 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
 
   NSLog(@"params =========== %@ share type ==== %ld", params, type);
   
-  void (^goShare)(UIImage*) = ^(UIImage *image){
+  void (^goShare)(id) = ^(id image){
     NSString *shareTitle = params[@"mainTitle"] ?: kShareTitle;
     NSString *shareDescription = params[@"subTitle"] ?: kShareDescription;
     NSString *link = params[@"link"] ?: kShareLink;
@@ -195,18 +195,16 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
      }];
   };
   
-  NSString *localImagePath = params[@"localImagePath"];
-    if ([localImagePath hasPrefix:@"http"]) {
-        goShare(localImagePath);
-        return;
-    }
+  NSString *imageUri = params[@"imageUri"];
   NSFileManager *fm = [NSFileManager defaultManager];
-  if (localImagePath && [fm fileExistsAtPath:localImagePath]) {
-    goShare([[UIImage alloc] initWithContentsOfFile:localImagePath]);
-  }else {
+  if ([imageUri hasPrefix:@"http"]) {
+    goShare(imageUri);
+  } else if (imageUri && [fm fileExistsAtPath:imageUri]) {
+    goShare([[UIImage alloc] initWithContentsOfFile:imageUri]);
+  } else {
     NSString *icon = [[[[NSBundle mainBundle] infoDictionary]valueForKeyPath:@"CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconFiles"] lastObject];
     goShare([UIImage imageNamed:icon]);
-  };
+  }
 }
 
 - (SEL)originalSelector {
