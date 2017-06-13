@@ -1,11 +1,14 @@
 
 {
   "name": "react-native-umeng-social-wrapper",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "",
   "main": "UMSocialWrapper.js",
   "files": [
-    "img"
+    "img",
+    "android",
+    "ios",
+    "windows"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
