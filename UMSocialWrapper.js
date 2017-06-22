@@ -85,11 +85,12 @@ function share (
                   key={`key-${ii}`} 
                   underlayColor={'#f9fafa'}
                   onPress={() => {
-                    UMengShareManager.addEvent(info, platforms[ii], (error, success) => {
-                      animatedContainer && animatedContainer.hide(() => {
-                        callback && callback(error, success);
-                      }) || (callback && callback(error, success));
-                    });
+                    animatedContainer && animatedContainer.hide(() => null);
+                    UMengShareManager.addEvent(
+                      info,
+                      platforms[ii],
+                      (error, success) => callback && callback(error, success)
+                    );
                   }}
                 >
                   <Image source={item} />
