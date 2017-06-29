@@ -12,7 +12,6 @@ import {
   PixelRatio,
 } from 'react-native';
 import { AnimatedAlertContainer } from 'zhike-mobile-components';
-import { alertShowAction, alertHideAction } from 'zhike-mobile-navigation/actions';
 const UMengShareManager = NativeModules.ZKUmengSocialWrapper;
 const WECHAT_SESSION = require('./img/ic-wechat-session.png');
 const WECHAT_TIMELINE = require('./img/ic-wechat-timeline.png');
@@ -47,10 +46,10 @@ function shareToSocialNetwork(
 }
 
 function share (
-  args: { info:ShareInfoType, dispatch:any, platforms?:Array<string>, icons?:Array<number> },
+  args: { info:ShareInfoType, dispatch:any, platforms?:Array<string>, icons?:Array<number>, alertShowAction:(route:Object) => Object | null, alertHideAction:() => void },
   callback:(error:string, done?:bool) => void) {
 
-  const { info, dispatch, platforms=[...DEFAULT_PLATFORMS], icons=[...DEFAULT_PLATFORM_ICONS] } = args || {};
+  const { info, dispatch, platforms=[...DEFAULT_PLATFORMS], icons=[...DEFAULT_PLATFORM_ICONS], alertShowAction, alertHideAction } = args || {};
   if (!info) {
     callback && callback('no data to share');
     return;
