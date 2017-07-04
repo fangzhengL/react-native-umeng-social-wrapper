@@ -46,10 +46,10 @@ function shareToSocialNetwork(
 }
 
 function share (
-  args: { info:ShareInfoType, dispatch:any, platforms?:Array<string>, icons?:Array<number>, alertShowAction:(route:Object) => Object | null, alertHideAction:() => void },
+  args: { info:ShareInfoType, showAlert:(components:any) => void, hideAlert:() => void, platforms?:Array<string>, icons?:Array<number> },
   callback:(error:string, done?:bool) => void) {
 
-  const { info, dispatch, platforms=[...DEFAULT_PLATFORMS], icons=[...DEFAULT_PLATFORM_ICONS], alertShowAction, alertHideAction } = args || {};
+  const { info, platforms=[...DEFAULT_PLATFORMS], icons=[...DEFAULT_PLATFORM_ICONS], showAlert, hideAlert } = args || {};
   if (!info) {
     callback && callback('no data to share');
     return;
@@ -57,11 +57,11 @@ function share (
 
   let animatedContainer = null;
 
-  dispatch(alertShowAction(
+  showAlert(
     <AnimatedAlertContainer
       ref={ref => (animatedContainer = ref)}
       onHide={(onDidHide) => {
-        dispatch(alertHideAction());
+        hideAlert();
         if (!onDidHide) {
           callback && callback('canceled');
         } else {
@@ -105,7 +105,7 @@ function share (
             if (animatedContainer) {
               animatedContainer.hide();
             } else {
-              dispatch(alertHideAction());
+              hideAlert();
               callback && callback('canceled');
             }
           }}
@@ -118,7 +118,7 @@ function share (
         </TouchableHighlight>
       </View>
     </AnimatedAlertContainer>
-  ));
+  );
 }
 
 const thisArg = UMengShareManager;
