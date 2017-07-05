@@ -187,8 +187,44 @@ RCT_EXPORT_METHOD(addEvent:(NSDictionary *)params type:(UMSocialPlatformType)sha
              if (callback) { callback(@[errorMsg, @NO]); }
              NSLog(@"不支持的分享数据类型");
              break;
+           case UMSocialPlatformErrorType_ShareDataNil:
+             if (callback) { callback(@[@"分享内容为空", @NO]); }
+             NSLog(@"分享内容为空");
+             break;
+             
+           case UMSocialPlatformErrorType_AuthorizeFailed:
+             if (callback) { callback(@[@"授权失败", @NO]); }
+             NSLog(@"授权失败");
+             break;
+             
+           case UMSocialPlatformErrorType_RequestForUserProfileFailed:
+             if (callback) { callback(@[@"请求用户信息失败", @NO]); }
+             NSLog(@"请求用户信息失败");
+             break;
+             
+           case UMSocialPlatformErrorType_NotInstall:
+             if (callback) { callback(@[@"微信未安装", @NO]); }
+             NSLog(@"未安装微信");
+             break;
+             
+           case UMSocialPlatformErrorType_CheckUrlSchemaFail:
+             if (callback) { callback(@[@"url schema 错误", @NO]); }
+             NSLog(@"url schema 错误");
+             break;
+             
+           case UMSocialPlatformErrorType_SourceError:
+             if (callback) { callback(@[@"客户端错误", @NO]); }
+             NSLog(@"第三方错误");
+             break;
+             
+           case UMSocialPlatformErrorType_ProtocolNotOverride:
+             if (callback) { callback(@[@"协议未实现", @NO]); }
+             NSLog(@"协议未实现");
+             break;
              
            default:
+             if (callback) { callback(@[errorMsg, @NO]); }
+             NSLog(@"其他错误");
              break;
          }
        }
